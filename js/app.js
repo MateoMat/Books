@@ -4,7 +4,7 @@ class Books {
     constructor() {}
 
     addBookToList(book) {
-        var newElement = '<div><h2>' + book.title + '</h2></h3>' + book.author + '</h3><button>Więcej</button>';
+        var newElement = '<div data-id="' + book.id + '"><h2>' + book.title + '</h2></h3>' + book.author + '</h3><button data>Więcej</button>';
         $('books').append(newElement);
         console.log(book['title']);
     }
@@ -29,3 +29,9 @@ var books = new Books();
 books.createBookList();
 
 
+$('books').on('click', 'button', function () {
+    console.log($(this).parent('div').data('id'));
+    var $this = this; // zapobiegnie nadpisaniu przez ajax
+    //console.log(this.parrent().data('id'));
+
+});
