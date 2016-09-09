@@ -19,9 +19,6 @@ class Books {
             for (var i = 0; i < books.length; i++) {
                 $this.addBookToList(books[i]);
             }
-            //books.forEach(function (book) {
-
-            //});
         });
     }
 
@@ -30,3 +27,5 @@ class Books {
 var books = new Books();
 
 books.createBookList();
+
+

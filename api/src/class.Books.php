@@ -36,9 +36,7 @@ class Books extends DBConfig {
         $query = "SELECT `id`,`title`,`author` FROM `books`";
 
         $result = $this->dbConnection->query($query);
-        //var_dump($result);
         if ($result == TRUE) {
-            //  var_dump(mysqli_fetch_all($result, MYSQLI_ASSOC));
             return mysqli_fetch_all($result, MYSQLI_ASSOC);
         }
         else {
