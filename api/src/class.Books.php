@@ -28,7 +28,7 @@ class Books extends DBConfig {
         
     }
 
-    public function getBook($id) {
+    public function getBookById($id) {
         
     }
 
