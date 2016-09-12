@@ -86,20 +86,24 @@ $(function () {
         var book_id = $par.data('id');
         console.log(book_id);
         closeAllDetails();
+        
+        $.ajax({
+                url: 'api/books.php',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    id: book_id
+                },
+        }).done(function (books) {
+                //console.log(books[0].descr);
+                $par.find('div.panel-body').text(books[0].descr);
+        });
+        
         $par.find('div.panel-body').show();
-        
-        if($par.find('div.panel-body').text().length > 0 ){
-            console.log("już wczytane, nie ładujemy z bazy");
-        }
-        else{
-            console.log("nie wczytane i ładujemy z bazy");
-        }
-        
         var $this = this; // zapobiegnie nadpisaniu przez ajax
         //console.log(this.parrent().data('id'));
 
     });
-
 
     closeAllDetails();
 

@@ -17,19 +17,26 @@ class Books extends DBConfig {
     }
 
     public function addBook() {
-        
+
     }
 
     public function editBook() {
-        
+
     }
 
     public function deleteBook() {
-        
+
     }
 
     public function getBookById($id) {
-        
+        $query = "SELECT `descr` FROM `books` where `id` = " . $id;
+
+        $result = $this->dbConnection->query($query);
+        if ($result == TRUE) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
     }
 
     public function getAllBooks() {
@@ -38,8 +45,7 @@ class Books extends DBConfig {
         $result = $this->dbConnection->query($query);
         if ($result == TRUE) {
             return mysqli_fetch_all($result, MYSQLI_ASSOC);
-        }
-        else {
+        } else {
             return false;
         }
     }

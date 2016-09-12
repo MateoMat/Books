@@ -12,6 +12,11 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
     case 'GET':
         $books = new Books();
-        echo json_encode($books->getAllBooks());
+        if (!empty($_GET['id'])) {
+            echo json_encode($books->getBookById($_GET['id']));
+        } else {
+            echo json_encode($books->getAllBooks());
+        }
+
         break;
 }
