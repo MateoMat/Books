@@ -6,6 +6,7 @@ $(function() {
     var LABEL_AUTHOR = "Author";
     var LABEL_TITLE = "Title";
     var LABEL_DESCR = "Description";
+    var BTN_ADD_BOOK = "Add book";
 
     class Books {
 
@@ -61,6 +62,17 @@ $(function() {
     $('label#lbl_add_book_author').text(LABEL_AUTHOR);
     $('label#lbl_add_book_title').text(LABEL_TITLE);
     $('label#lbl_add_book_descr').text(LABEL_DESCR);
+    $('button#btn_add_book').text(BTN_ADD_BOOK);
+    
+    $('button#btn_add_book').on('click', function(event){
+        console.log("będę dodawał książkę");
+        //check if author, title & description is not empty
+        // if empty allert window
+        // if not add to db
+    });
+    
+    
+    
     
 
     $('books').on('click', 'button', function() {
