@@ -7,6 +7,9 @@ $(function() {
     var LABEL_TITLE = "Title";
     var LABEL_DESCR = "Description";
     var BTN_ADD_BOOK = "Add book";
+    var MSG_AUTHOR = "Author field can't be empty";
+    var MSG_TITLE = "Title field can't be empty";
+    var MSG_DESCR = "Description field can't be empty";
 
     class Books {
 
@@ -65,10 +68,28 @@ $(function() {
     $('button#btn_add_book').text(BTN_ADD_BOOK);
     
     $('button#btn_add_book').on('click', function(event){
-        console.log("będę dodawał książkę");
-        //check if author, title & description is not empty
-        // if empty allert window
-        // if not add to db
+//        console.log("będę dodawał książkę");
+//        console.log($('input#inp_add_book_author').val().length);
+        
+        if( $('input#inp_add_book_author').val().length == 0){
+            bootbox.alert(MSG_AUTHOR);
+            return false;
+        }
+        
+        if( $('input#inp_add_book_title').val().length == 0){
+            bootbox.alert(MSG_TITLE);
+            return false;
+        }
+        
+        if( $('textarea#ta_add_book_descr').val().length == 0){
+            bootbox.alert(MSG_DESCR);
+            return false;
+        }
+        
+        // take data out and write POST AJAX
+        
+        
+        
     });
     
     
