@@ -1,5 +1,8 @@
 $(function () {
 
+var BTN_MORE = "Więcej";
+var BTN_CLOSE = "Zamknij";
+
     class Books {
 
         constructor() {}
@@ -34,7 +37,7 @@ $(function () {
                           + '</div>'
                           + '<div class="panel-body">'
                           + '</div>'
-                          + '<div class="panel-footer"><button>Więcej</button>'
+                          + '<div class="panel-footer"><button>' + BTN_MORE +'</button>'
                           + '</div>'
                        + '</div>'
                     +'</div>';       
@@ -87,7 +90,11 @@ $(function () {
         console.log(book_id);
         closeAllDetails();
         
-        $.ajax({
+        
+        if($(this).text() == BTN_MORE ){
+            // open and read from DB
+            
+            $.ajax({
                 url: 'api/books.php',
                 type: 'GET',
                 dataType: 'json',
@@ -95,13 +102,27 @@ $(function () {
                     id: book_id
                 },
         }).done(function (books) {
-                //console.log(books[0].descr);
                 $par.find('div.panel-body').text(books[0].descr);
+                $par.find('div.panel-body').show();
         });
+          
+            // change button name :)
+            $(this).text(BTN_CLOSE);
+        }
+        else if( $(this).text() == BTN_CLOSE){
+            // close 
+            $par.find('div.panel-body').hide();
+            $(this).text(BTN_MORE);
+        }
+        console.log();
         
-        $par.find('div.panel-body').show();
-        var $this = this; // zapobiegnie nadpisaniu przez ajax
-        //console.log(this.parrent().data('id'));
+        
+        
+        
+        
+        
+        //var $this = this; // zapobiegnie nadpisaniu przez ajax
+
 
     });
 
