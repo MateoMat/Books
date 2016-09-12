@@ -21,24 +21,44 @@ and open the template in the editor.
 </head>
 
 <body>
-    <!-- <row class="col-md-6 col-md-offset-3"> -->
-    <books></books>
+    
+   
+    <div id="add_book_title" class="col-md-6 col-md-offset-3">
+        <h3></h3> 
+    </div>
 
-<!--     </row> 
     <div class="col-md-6 col-md-offset-3">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h3 class="panel-title">Tytuł - Autor</h3>
-            </div>
-            <div class="panel-body">
-            </div>
-            <div class="panel-footer"> Panel Footer
-            </div>
-        </div>
-    </div>-->
+        <label id="lbl_add_book_author"></label>
+        <input id="inp_add_book_author" type="text" size="40">   
+    </div>
+    <div class="col-md-6 col-md-offset-3">
+        <label id="lbl_add_book_title"></label>
+        <input id="inp_add_book_title" type="text" size="40">   
+    </div>
+    <div class="col-md-6 col-md-offset-3">
+        <label id="lbl_add_book_descr"></label>
+    </div>
+    <div class="col-md-6 col-md-offset-3">
+        <textarea id="ta_add_book_descr"></textarea>
+    </div>
 
 
-
+<!--    <row class="col-md-6 col-md-offset-3">
+    <form id="book_add">
+        <row class="row col-md-6">
+            <label name="author"></label>
+            <input name="author"></input>
+        </row>
+        <row class="row col-md-6">
+            <label name="title"></label>
+            <input name="title"></input>
+        </row>
+        <row class="row col-md-6">
+        <textarea name="descr"></textarea>
+        </row>
+    </form>
+    </row>-->
+    <books></books>
 
 </body>
 

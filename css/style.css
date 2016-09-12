@@ -1,3 +1,9 @@
 body {
     background-color: whitesmoke;
 }
+
+ textarea#ta_add_book_descr{
+    width: 534px;
+    height: 70px;
+    resize: none;
+}
