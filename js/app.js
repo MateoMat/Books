@@ -46,6 +46,23 @@ $(function() {
                 $('books div.panel-body').hide();
             });
         }
+        
+        getBookDescription( book_id ){
+            var $this = this;
+            var descr = "";
+             $.ajax({
+                url: 'api/books.php',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    id: book_id
+                },
+            }).done(function(books) {
+                $('*[data-id="' + book_id +'"] div.panel-body').text(books[0].descr);             
+            });
+            
+            
+        }
     }
 
     function closeAllDetails() {
@@ -100,26 +117,16 @@ $(function() {
 
         var $par = $(this).parent('div').parent('div').parent('div');
         var book_id = $par.data('id');
-        //console.log(book_id);
-        //closeAllDetails();
-
 
         if ($(this).text() == BTN_MORE) {
-            // open and read from DB
-            $.ajax({
-                url: 'api/books.php',
-                type: 'GET',
-                dataType: 'json',
-                data: {
-                    id: book_id
-                },
-            }).done(function(books) {
-                $par.find('div.panel-body').text(books[0].descr);
-                $par.find('div.panel-body').show();
-            });
-
+            // get book description from db by ajax call
+            books.getBookDescription( book_id );
+            // show element with description
+            $par.find('div.panel-body').show();
+            
             // change button name :)
             $(this).text(BTN_CLOSE);
+            
         } else if ($(this).text() == BTN_CLOSE) {
             // close
             $par.find('div.panel-body').hide();
@@ -129,7 +136,7 @@ $(function() {
         console.log();
 
 
-        //var $this = this; // zapobiegnie nadpisaniu przez ajax
+        //var $this = this; // zapobiegnie nadpisaniu przez aja``x
 
 
     });
