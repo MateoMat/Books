@@ -112,13 +112,8 @@ $(function() {
             }).done(function(books) {
                 book['title'] = books[0].title;
                 book['author'] = books[0].author;
-                book['descr'] = books[0].descr;
-                
-                console.log(book);
-                
+                book['descr'] = books[0].descr;                
             });
-//            console.log('getBook4Edit');
-//            console.log(book);
            return book;
         }
         
@@ -215,7 +210,6 @@ $(function() {
 
         var $par = $(this).parent('div').parent('div').parent('div');
         var book_id = $par.data('id');
-        //console.log();
         
         bootbox.dialog({
         message: MSG_DEL_MSG + '<br><strong>' + $par.find('h3').text() + '</strong>' ,
