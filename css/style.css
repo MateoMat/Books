@@ -2,7 +2,7 @@ body {
     background-color: whitesmoke;
 }
 
- textarea#ta_add_book_descr{
+textarea#ta_add_book_descr{
     width: 534px;
     height: 70px;
     resize: none;
@@ -20,12 +20,21 @@ body {
     text-align: right;
 }
 
+.button_row {
+    width: 100%;
+    text-align:center;
+}
+
 .button_more {
-    display: block;
-    float:  left;
+    float: left;
 }
 
 .button_del {
-    display: block;
-    float: right;
+    float: right;    
 }
+
+.button_edit {
+    display: inline-block;
+    margin: 0 auto;
+}
+

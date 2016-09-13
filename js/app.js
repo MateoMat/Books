@@ -4,6 +4,7 @@ $(function() {
     var BTN_CLOSE = "Close";
     var BTN_DEL = "Remove Book"
     var BTN_CANCEL = "Cancel";
+    var BTN_EDIT = "Edit";
     var FORM_ADD_BOOK_TITLE = "Add book to library";
     var LABEL_AUTHOR = "Author";
     var LABEL_TITLE = "Title";
@@ -23,17 +24,25 @@ $(function() {
         addBookToList(book) {
             var newEl = '<div class="col-md-6 col-md-offset-3" data-id="' + book.id + '">' +
                 '<div class="panel panel-info">' +
-                '<div class="panel-heading">' +
-                '<h3 class="panel-title">' + book.title + ' - ' + book.author + '</h3>' +
-                '</div>' +
-                '<div class="panel-body">' +
-                '</div>' +
-                '<div class="panel-footer">' +
-                '<button class="button_more btn btn-xs btn-primary">' + BTN_MORE  + '</button>' +
-                '<button class="button_del btn btn-xs btn-danger">' + BTN_DEL + '</button>' +
-                '</div>' +
-                '</div>' +
-                '</div>';
+                   
+                   '<div class="panel-heading">' +
+                     '<h3 class="panel-title">' + book.title + ' - ' + book.author + '</h3>' +
+                   '</div>' +
+                    
+                   '<div class="panel-body">' +
+                   '</div>' +
+                  
+                   '<div class="panel-footer button_row">' +
+
+                     '<button class="button_more btn btn-xs btn-primary">' + BTN_MORE  + '</button>' +
+                     '<button class="button_edit btn btn-xs btn-success">' + BTN_EDIT  + '</button>' +
+                     '<button class="button_del  btn btn-xs btn-danger">' + BTN_DEL + '</button>' +
+                    
+                   '</div>' +
+                  
+                  '</div>' +
+                
+                    '</div>';
 
             $('books').append(newEl);
             closeAllDetails();
@@ -129,7 +138,7 @@ $(function() {
     function closeAllDetails() {
         // first change all button names to MORE        
         $('books div.panel-body').hide();
-        $('books button').text(BTN_MORE);
+        $('books button.button_more').text(BTN_MORE);
     }
 
 
@@ -143,23 +152,28 @@ $(function() {
     $('label#lbl_add_book_descr').text(LABEL_DESCR);
     $('button#btn_add_book').text(BTN_ADD_BOOK);
     
+    // event to add Book
     $('button#btn_add_book').on('click', function(event){
-     console.log($('input#inp_add_book_author').val().length);
+        var author = $('input#inp_add_book_author').val();
+        var title = $('input#inp_add_book_title').val();
+        var descr = $('textarea#ta_add_book_descr').val();
         
-        if( $('input#inp_add_book_author').val().length == 0){
+        if( author.length == 0){
             bootbox.alert(MSG_AUTHOR);
             return false;
         }
         
-        if( $('input#inp_add_book_title').val().length == 0){
+        if( title.length == 0){
             bootbox.alert(MSG_TITLE);
             return false;
         }
         
-        if( $('textarea#ta_add_book_descr').val().length == 0){
+        if( descr.length == 0){
             bootbox.alert(MSG_DESCR);
             return false;
         }
+        
+        books.addBook2DB(author, title, descr);
     });
     
     // event to remove Book
@@ -184,11 +198,10 @@ $(function() {
                         label: BTN_DEL,
                                 className: "btn-danger",
                                 callback: function() {
-                                // call
+                                // call Book delete
                                 books.delBook(book_id);
                                 }
                         },
-                        
                 }
         });        
     });
