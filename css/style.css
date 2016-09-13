@@ -7,3 +7,25 @@ body {
     height: 70px;
     resize: none;
 }
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.button_more {
+    display: block;
+    float:  left;
+}
+
+.button_del {
+    display: block;
+    float: right;
+}

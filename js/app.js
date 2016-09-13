@@ -2,6 +2,8 @@ $(function() {
 
     var BTN_MORE = "More";
     var BTN_CLOSE = "Close";
+    var BTN_DEL = "Remove Book"
+    var BTN_CANCEL = "Cancel";
     var FORM_ADD_BOOK_TITLE = "Add book to library";
     var LABEL_AUTHOR = "Author";
     var LABEL_TITLE = "Title";
@@ -10,6 +12,8 @@ $(function() {
     var MSG_AUTHOR = "Author field can't be empty";
     var MSG_TITLE = "Title field can't be empty";
     var MSG_DESCR = "Description field can't be empty";
+    var MSG_DEL_TITLE = "Removing book";
+    var MSG_DEL_MSG = "Are you sure that you want to remove this book ?";
 
     class Books {
 
@@ -24,7 +28,9 @@ $(function() {
                 '</div>' +
                 '<div class="panel-body">' +
                 '</div>' +
-                '<div class="panel-footer"><button>' + BTN_MORE  + '</button>' +
+                '<div class="panel-footer">' +
+                '<button class="button_more btn btn-xs btn-primary">' + BTN_MORE  + '</button>' +
+                '<button class="button_del btn btn-xs btn-danger">' + BTN_DEL + '</button>' +
                 '</div>' +
                 '</div>' +
                 '</div>';
@@ -60,8 +66,21 @@ $(function() {
             }).done(function(books) {
                 $('*[data-id="' + book_id +'"] div.panel-body').text(books[0].descr);             
             });
+        }
+        
+        // removing HTML element for deleteg book from <books>
+        removeBookElement( book_id ){
+            $('books div[data-id="' + book_id +'"]').remove();
+        }
+        
+        delBook( book_id ){
+            console.log( " deleteting book with id = " + book_id);
             
             
+            
+            
+            
+            this.removeBookElement( book_id );
         }
     }
 
@@ -110,10 +129,53 @@ $(function() {
     });
     
     
-    
+    $('books').on('click', 'button.button_del', function() {
+
+        var $par = $(this).parent('div').parent('div').parent('div');
+        var book_id = $par.data('id');
+        //console.log();
+        
+        bootbox.dialog({
+        message: MSG_DEL_MSG + '<br><strong>' + $par.find('h3').text() + '</strong>' ,
+                title: MSG_DEL_TITLE,
+                buttons: {
+                success: {
+                label: BTN_CANCEL,
+                        className: "btn-success",
+                        callback: function() {
+                        // do nothing
+                        }
+                },
+                        danger: {
+                        label: BTN_DEL,
+                                className: "btn-danger",
+                                callback: function() {
+                                // call
+                                books.delBook(book_id);
+                                }
+                        },
+                        
+                }
+        });
+        
+        
+        
+        
+        
+        
+//        bootbox.confirm("test", function(result) {
+//            if ( result ) {
+//                // delete book with book_id
+//            }
+//            console.log("Confirm result: "+result);
+//        }); 
+        
+        
+        
+    });
     
 
-    $('books').on('click', 'button', function() {
+    $('books').on('click', 'button.button_more', function() {
 
         var $par = $(this).parent('div').parent('div').parent('div');
         var book_id = $par.data('id');
@@ -133,13 +195,15 @@ $(function() {
             // change button name
             $(this).text(BTN_MORE);
         }
-        console.log();
+       
 
 
         //var $this = this; // zapobiegnie nadpisaniu przez aja``x
-
-
     });
+    
+    
+    
+    
 
     closeAllDetails();
 
