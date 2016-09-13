@@ -38,6 +38,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
             if (!empty($_GET['new_id'])) {
                 echo json_encode($books->getBookById($_GET['new_id']));
             }
+            if (!empty($_GET['edit_id'])) {
+                echo json_encode($books->getWholeBookById($_GET['edit_id']));
+            }
         }
 
 

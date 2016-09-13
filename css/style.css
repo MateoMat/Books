@@ -1,5 +1,6 @@
 body {
     background-color: whitesmoke;
+    margin-top: 0px;
 }
 
 textarea#ta_add_book_descr{
@@ -7,6 +8,13 @@ textarea#ta_add_book_descr{
     height: 70px;
     resize: none;
 }
+
+textarea#ta_edit_book_descr{
+    width: 534px;
+    height: 140px;
+    resize: none;
+}
+
 
 .text-center {
     text-align: center;
@@ -36,5 +44,9 @@ textarea#ta_add_book_descr{
 .button_edit {
     display: inline-block;
     margin: 0 auto;
+}
+
+.navbar {
+    background-color: grey;
 }
 

@@ -75,6 +75,21 @@ class Books extends DBConfig {
         }
     }
 
+    public function getWholeBookById($id) {
+        $query = 'SELECT * FROM `books` WHERE `id`=?;';
+        $stmt = $this->dbConnection->prepare($query);
+        if ($stmt) {
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            if (!$stmt->error) {
+                $result = $stmt->get_result();
+                return mysqli_fetch_all($result, MYSQLI_ASSOC);
+            } else {
+                return FALSE;
+            }
+        }
+    }
+
     public
             function getAllBooks() {
         $query = "SELECT `id`,`title`,`author` FROM `books`;";

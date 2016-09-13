@@ -1,10 +1,12 @@
 $(function() {
 
+    var PAGE_TITLE = "Book Library";
     var BTN_MORE = "More";
     var BTN_CLOSE = "Close";
     var BTN_DEL = "Remove Book"
     var BTN_CANCEL = "Cancel";
     var BTN_EDIT = "Edit";
+    var BTN_SAVE = "Save";
     var FORM_ADD_BOOK_TITLE = "Add book to library";
     var LABEL_AUTHOR = "Author";
     var LABEL_TITLE = "Title";
@@ -15,6 +17,7 @@ $(function() {
     var MSG_DESCR = "Description field can't be empty";
     var MSG_DEL_TITLE = "Removing book";
     var MSG_DEL_MSG = "Are you sure that you want to remove this book ?";
+    var MSG_EDIT_TITLE = "Edit Book";
 
     class Books {
 
@@ -95,6 +98,30 @@ $(function() {
             });
         }
         
+        getBook4Edit( book_id ){
+            var $this = this;
+            var book = [];
+            var ret;
+             $.ajax({
+                url: 'api/books.php',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    edit_id: book_id
+                },
+            }).done(function(books) {
+                book['title'] = books[0].title;
+                book['author'] = books[0].author;
+                book['descr'] = books[0].descr;
+                
+                console.log(book);
+                
+            });
+//            console.log('getBook4Edit');
+//            console.log(book);
+           return book;
+        }
+        
         // removing HTML element for deleted Book from <books>
         removeBookElement( book_id ){
             $('books div[data-id="' + book_id +'"]').remove();
@@ -140,6 +167,12 @@ $(function() {
         $('books div.panel-body').hide();
         $('books button.button_more').text(BTN_MORE);
     }
+    
+    function cleanAddBookForm(){
+        $('input#inp_add_book_author').val("");
+        $('input#inp_add_book_title').val("");
+        $('textarea#ta_add_book_descr').val("");
+    }
 
 
     var books = new Books();
@@ -174,6 +207,7 @@ $(function() {
         }
         
         books.addBook2DB(author, title, descr);
+        cleanAddBookForm();
     });
     
     // event to remove Book
@@ -229,5 +263,71 @@ $(function() {
             $(this).text(BTN_MORE);
         }
     });
+    
+    // event to edit Book
+     $('books').on('click', 'button.button_edit', function() {
+          var $par = $(this).parent('div').parent('div').parent('div');
+          var book_id = $par.data('id');
+          var book = books.getBook4Edit( book_id );
+          
+    var $editDlg = bootbox.dialog({
+                title: MSG_EDIT_TITLE,
+                message: 
+                    '<div class="row">  ' +
+                     '<div class="col-md-12"> ' +
+                       '<form class="form-horizontal"> ' +
+                          
+                           '<div class="form-group"> ' +
+                             '<label class="col-md-2 control-label">' + LABEL_AUTHOR +'</label> ' +
+                               '<div class="col-md-6"> ' +
+                                  '<input id="inp_edit_book_author" type="text" class="form-control input-md"> ' +
+                               '</div> ' +
+                           '</div>'+
+                           
+                           '<div class="form-group"> ' +
+                             '<label class="col-md-2 control-label">' + LABEL_TITLE +'</label> ' +
+                               '<div class="col-md-6"> ' +
+                                  '<input id="inp_edit_book_title" type="text" class="form-control input-md"> ' +
+                               '</div> ' +
+                           '</div>'+
+                           
+                           '<div class="form-group"> ' +
+                             '<label class="col-md-2 control-label">' + LABEL_DESCR +'</label> ' +
+                           '</div>'+
+                           '<div class="col-md-2"> ' +
+                                '<textarea id="ta_edit_book_descr" class=""></textarea>'+
+                           '</div>'+
+                       '</form> </div>  </div>',
+                buttons: {
+                    cancel: {
+                        label: BTN_CANCEL,
+                        className: "btn-success",
+                            callback: function () {
+                                // do nothing
+                            }
+                        },
+                    save: {
+                        label: BTN_SAVE,
+                        className: "btn-danger",
+                            callback: function () {
+                                var author = $('#inp_edit_book_author').val();
+                                var title = $('#inp_edit_book_title');
+                                var descr = $('#ta_edit_book_descr');
+                                console.log('BTN_SAVE : ' + author);
+                                                                
+                            }
+                        }
+                    
+                    }
+                }
+        ).bind('shown.bs.modal', function(){
+            $editDlg.find('input#inp_edit_book_author').val(book['author']);
+            $editDlg.find('input#inp_edit_book_title').val(book['title']);
+            $editDlg.find('textarea#ta_edit_book_descr').val(book['descr']);
+        });     
+     });
+    
+    // setting page Title
+    $('head title').text(PAGE_TITLE);
 // end of APP    
 });
