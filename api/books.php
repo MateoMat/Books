@@ -5,6 +5,7 @@ require 'src/class.Books.php';
 
 
 switch ($_SERVER['REQUEST_METHOD']) {
+
     case 'POST':
         $books = new Books();
 
@@ -19,7 +20,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 $author = $_POST['author'];
                 $title = $_POST['title'];
                 $descr = $_POST['descr'];
-                $books->addBook($author, $title, $descr);
+                echo json_encode($books->addBook($author, $title, $descr));
             }
         }
 
@@ -27,11 +28,19 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
     case 'GET':
         $books = new Books();
-        if (!empty($_GET['id'])) {
-            echo json_encode($books->getBookById($_GET['id']));
-        } else {
+
+        if (count($_GET) == 0) {
             echo json_encode($books->getAllBooks());
+        } else {
+            if (!empty($_GET['descr_id'])) {
+                echo json_encode($books->getBookDescrById($_GET['descr_id']));
+            }
+            if (!empty($_GET['new_id'])) {
+                echo json_encode($books->getBookById($_GET['new_id']));
+            }
         }
+
+
 
         break;
 }

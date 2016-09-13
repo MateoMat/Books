@@ -19,8 +19,8 @@ $(function() {
 
         constructor() {}
 
+        // add Book to HTML
         addBookToList(book) {
-
             var newEl = '<div class="col-md-6 col-md-offset-3" data-id="' + book.id + '">' +
                 '<div class="panel panel-info">' +
                 '<div class="panel-heading">' +
@@ -36,9 +36,10 @@ $(function() {
                 '</div>';
 
             $('books').append(newEl);
-
+            closeAllDetails();
         }
 
+        // create Book list in HTML
         createBookList() {
             var $this = this;
             $.ajax({
@@ -53,6 +54,7 @@ $(function() {
             });
         }
         
+        // get Book description from database for id
         getBookDescription( book_id ){
             var $this = this;
             var descr = "";
@@ -61,18 +63,35 @@ $(function() {
                 type: 'GET',
                 dataType: 'json',
                 data: {
-                    id: book_id
+                    descr_id: book_id
                 },
             }).done(function(books) {
                 $('*[data-id="' + book_id +'"] div.panel-body').text(books[0].descr);             
             });
         }
         
-        // removing HTML element for deleteg book from <books>
+        // get Book from database (id,author,title) for id
+        getBook( book_id ){
+            var $this = this;
+            var descr = "";
+             $.ajax({
+                url: 'api/books.php',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    new_id: book_id
+                },
+            }).done(function(books) {
+                $this.addBookToList(books[0])             
+            });
+        }
+        
+        // removing HTML element for deleted Book from <books>
         removeBookElement( book_id ){
             $('books div[data-id="' + book_id +'"]').remove();
         }
         
+        // remove Book from database
         delBook( book_id ){
             var $this = this;
             
@@ -88,7 +107,9 @@ $(function() {
                 });
         }
         
+        // add Book to database
         addBook2DB( author, title, descr) { // the same var names for POST
+            var $this = this;
             $.ajax({
                 type: 'POST',
                         url: 'api/books.php',
@@ -97,27 +118,22 @@ $(function() {
                             title : title,
                             descr : descr
                         },
-                        success: function (data, status) {    
-                        $this.removeBookElement(book_id);
+                        success: function (data, status) {
+                            // data contains inserted record number returned
+                            $this.getBook(data);
                         }
                 });
-            
         }
     }
 
     function closeAllDetails() {
-        // first change all button names to MORE
-        
+        // first change all button names to MORE        
         $('books div.panel-body').hide();
         $('books button').text(BTN_MORE);
     }
 
 
     var books = new Books();
-    
-    //books.addBook2DB('Jakub Wędrowycz', 'Rozmyślania nad bimbrem', '"Powiadają ludzie, że bardzo groźne dla życia ludzkiego organizmu jest dopuszczenie do drastycznego obniżenia substancji życiowej. Aby tego uniknąć wskazane jest aby codziennie je uzupełnić spożywając conajmniej jedną szklankę bimbru. Ważne jest aby bimber ten był co najmniej 80%"');
-    
-
     books.createBookList();
     
     $('div#add_book_title h3').text(FORM_ADD_BOOK_TITLE);
@@ -128,8 +144,7 @@ $(function() {
     $('button#btn_add_book').text(BTN_ADD_BOOK);
     
     $('button#btn_add_book').on('click', function(event){
-//        console.log("będę dodawał książkę");
-//        console.log($('input#inp_add_book_author').val().length);
+     console.log($('input#inp_add_book_author').val().length);
         
         if( $('input#inp_add_book_author').val().length == 0){
             bootbox.alert(MSG_AUTHOR);
@@ -145,14 +160,9 @@ $(function() {
             bootbox.alert(MSG_DESCR);
             return false;
         }
-        
-        // take data out and write POST AJAX
-        
-        
-        
     });
     
-    
+    // event to remove Book
     $('books').on('click', 'button.button_del', function() {
 
         var $par = $(this).parent('div').parent('div').parent('div');
@@ -180,25 +190,11 @@ $(function() {
                         },
                         
                 }
-        });
-        
-        
-        
-        
-        
-        
-//        bootbox.confirm("test", function(result) {
-//            if ( result ) {
-//                // delete book with book_id
-//            }
-//            console.log("Confirm result: "+result);
-//        }); 
-        
-        
-        
+        });        
     });
     
 
+    // event to open Book Details 
     $('books').on('click', 'button.button_more', function() {
 
         var $par = $(this).parent('div').parent('div').parent('div');
@@ -219,16 +215,6 @@ $(function() {
             // change button name
             $(this).text(BTN_MORE);
         }
-       
-
-
-        //var $this = this; // zapobiegnie nadpisaniu przez aja``x
     });
-    
-    
-    
-    
-
-    closeAllDetails();
-
+// end of APP    
 });

@@ -23,7 +23,7 @@ class Books extends DBConfig {
             $stmt->bind_param('sss', $title, $author, $descr);
             $stmt->execute();
             if (!$stmt->error) {
-                return TRUE;
+                return $stmt->insert_id;
             } else {
                 return FALSE;
             }
@@ -49,11 +49,7 @@ class Books extends DBConfig {
         }
     }
 
-//$result = $this->dbConnection->query($query);
-
-
-    public
-            function getBookById($id) {
+    public function getBookDescrById($id) {
         $query = "SELECT `descr` FROM `books` where `id` = " . $id . ";";
         $result = $this->dbConnection->query($query);
 
@@ -61,6 +57,21 @@ class Books extends DBConfig {
             return mysqli_fetch_all($result, MYSQLI_ASSOC);
         } else {
             return false;
+        }
+    }
+
+    public function getBookById($id) {
+        $query = 'SELECT `id`,`title`,`author` FROM `books` WHERE `id`=?;';
+        $stmt = $this->dbConnection->prepare($query);
+        if ($stmt) {
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            if (!$stmt->error) {
+                $result = $stmt->get_result();
+                return mysqli_fetch_all($result, MYSQLI_ASSOC);
+            } else {
+                return FALSE;
+            }
         }
     }
 
