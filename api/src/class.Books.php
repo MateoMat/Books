@@ -25,17 +25,25 @@ class Books extends DBConfig {
     }
 
     public function deleteBook($id) {
-        $query = "DELETE FROM `books` where `id` = " . $id;
-        $result = $this->dbConnection->query($query);
 
-        if ($result == TRUE) {
-            return TRUE;
-        } else {
-            return FALSE;
+        $query = "DELETE FROM `books` where `id`=?";
+        $stmt = $this->dbConnection->prepare($query);
+        if ($stmt) {
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            if (!$stmt->error) {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
         }
     }
 
-    public function getBookById($id) {
+    //$result = $this->dbConnection->query($query);
+
+
+    public
+            function getBookById($id) {
         $query = "SELECT `descr` FROM `books` where `id` = " . $id;
         $result = $this->dbConnection->query($query);
 
@@ -46,7 +54,8 @@ class Books extends DBConfig {
         }
     }
 
-    public function getAllBooks() {
+    public
+            function getAllBooks() {
         $query = "SELECT `id`,`title`,`author` FROM `books`";
 
         $result = $this->dbConnection->query($query);
