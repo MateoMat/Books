@@ -9,13 +9,14 @@ switch ($_SERVER['REQUEST_METHOD']) {
         $books = new Books();
 
         if (count($_POST) == 0) {
-            // add new book
-            $books->addBook();
+// do absolutely nothing as no data is passed on
         } else {
             if (!empty($_POST['del_id'])) {
-                // delete book with del_id
+// delete book with del_id
                 $id = $_POST['del_id'];
                 $books->deleteBook($id);
+            } elseif (!empty($_POST['author']) && !empty($_POST['title']) && !empty($_POST['descr'])) {
+                $books->addBook();
             }
         }
 

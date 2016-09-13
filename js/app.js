@@ -87,6 +87,10 @@ $(function() {
                         }
                 });
         }
+        
+        addBook2DB( author, title, descr) { // the same var names for POST
+            
+        }
     }
 
     function closeAllDetails() {
