@@ -24,14 +24,21 @@ class Books extends DBConfig {
 
     }
 
-    public function deleteBook() {
+    public function deleteBook($id) {
+        $query = "DELETE FROM `books` where `id` = " . $id;
+        $result = $this->dbConnection->query($query);
 
+        if ($result == TRUE) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
 
     public function getBookById($id) {
         $query = "SELECT `descr` FROM `books` where `id` = " . $id;
-
         $result = $this->dbConnection->query($query);
+
         if ($result == TRUE) {
             return mysqli_fetch_all($result, MYSQLI_ASSOC);
         } else {

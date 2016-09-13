@@ -74,13 +74,18 @@ $(function() {
         }
         
         delBook( book_id ){
-            console.log( " deleteting book with id = " + book_id);
+            var $this = this;
             
-            
-            
-            
-            
-            this.removeBookElement( book_id );
+                $.ajax({
+                type: 'POST',
+                        url: 'api/books.php',
+                        data: {
+                            del_id : book_id
+                        },
+                        success: function (data, status) {    
+                        $this.removeBookElement(book_id);
+                        }
+                });
         }
     }
 

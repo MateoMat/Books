@@ -7,7 +7,18 @@ require 'src/class.Books.php';
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'POST':
         $books = new Books();
-        $books->addBook();
+
+        if (count($_POST) == 0) {
+            // add new book
+            $books->addBook();
+        } else {
+            if (!empty($_POST['del_id'])) {
+                // delete book with del_id
+                $id = $_POST['del_id'];
+                $books->deleteBook($id);
+            }
+        }
+
         break;
 
     case 'GET':
