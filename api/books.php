@@ -16,7 +16,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 $id = $_POST['del_id'];
                 $books->deleteBook($id);
             } elseif (!empty($_POST['author']) && !empty($_POST['title']) && !empty($_POST['descr'])) {
-                $books->addBook();
+                $author = $_POST['author'];
+                $title = $_POST['title'];
+                $descr = $_POST['descr'];
+                $books->addBook($author, $title, $descr);
             }
         }
 

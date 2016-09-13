@@ -16,8 +16,18 @@ class Books extends DBConfig {
         $this->dbConnection = null;
     }
 
-    public function addBook() {
-
+    public function addBook($author, $title, $descr) {
+        $query = 'INSERT INTO `books`(`title`, `author`, `descr`) VALUES(?,?,?);';
+        $stmt = $this->dbConnection->prepare($query);
+        if ($stmt) {
+            $stmt->bind_param('sss', $title, $author, $descr);
+            $stmt->execute();
+            if (!$stmt->error) {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        }
     }
 
     public function editBook() {
@@ -26,7 +36,7 @@ class Books extends DBConfig {
 
     public function deleteBook($id) {
 
-        $query = "DELETE FROM `books` where `id`=?";
+        $query = "DELETE FROM `books` where `id`=?;";
         $stmt = $this->dbConnection->prepare($query);
         if ($stmt) {
             $stmt->bind_param('i', $id);
@@ -39,12 +49,12 @@ class Books extends DBConfig {
         }
     }
 
-    //$result = $this->dbConnection->query($query);
+//$result = $this->dbConnection->query($query);
 
 
     public
             function getBookById($id) {
-        $query = "SELECT `descr` FROM `books` where `id` = " . $id;
+        $query = "SELECT `descr` FROM `books` where `id` = " . $id . ";";
         $result = $this->dbConnection->query($query);
 
         if ($result == TRUE) {
@@ -56,7 +66,7 @@ class Books extends DBConfig {
 
     public
             function getAllBooks() {
-        $query = "SELECT `id`,`title`,`author` FROM `books`";
+        $query = "SELECT `id`,`title`,`author` FROM `books`;";
 
         $result = $this->dbConnection->query($query);
         if ($result == TRUE) {

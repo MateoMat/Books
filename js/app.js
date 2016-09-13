@@ -89,6 +89,18 @@ $(function() {
         }
         
         addBook2DB( author, title, descr) { // the same var names for POST
+            $.ajax({
+                type: 'POST',
+                        url: 'api/books.php',
+                        data: {
+                            author : author,
+                            title : title,
+                            descr : descr
+                        },
+                        success: function (data, status) {    
+                        $this.removeBookElement(book_id);
+                        }
+                });
             
         }
     }
@@ -102,6 +114,9 @@ $(function() {
 
 
     var books = new Books();
+    
+    //books.addBook2DB('Jakub Wędrowycz', 'Rozmyślania nad bimbrem', '"Powiadają ludzie, że bardzo groźne dla życia ludzkiego organizmu jest dopuszczenie do drastycznego obniżenia substancji życiowej. Aby tego uniknąć wskazane jest aby codziennie je uzupełnić spożywając conajmniej jedną szklankę bimbru. Ważne jest aby bimber ten był co najmniej 80%"');
+    
 
     books.createBookList();
     
