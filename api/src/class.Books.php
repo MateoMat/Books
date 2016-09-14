@@ -7,8 +7,14 @@ class Books extends DBConfig {
     private $dbConnection;
 
     public function __construct() {
-        $this->dbConnection = mysqli_connect(
-                $this->server, $this->user, $this->password, $this->database); //, $port, $socket)
+        $this->dbConnection = new mysqli($this->server, $this->user, $this->password, $this->database);
+// VERY IMPORTANT !!!
+// fix problem on encoding and json_encode returning error 5
+        $this->dbConnection->set_charset("utf8");
+
+        if ($this->dbConnection->connect_error) {
+            die("DB Connection failed. Error: " . $this->dbConnection->connect_error);
+        }
     }
 
     public function __destruct() {
@@ -24,16 +30,13 @@ class Books extends DBConfig {
             $stmt->execute();
             if (!$stmt->error) {
                 return $stmt->insert_id;
-            } else {
-                return FALSE;
             }
         }
+        return FALSE;
     }
 
     public function editBook($id, $author, $title, $descr) {
-        /*
-         * UPDATE `books` SET `id`=[value-1],`title`=[value-2],`author`=[value-3],`descr`=[value-4] WHERE 1
-         */
+
         $query = 'UPDATE `books` SET `title`=?, `author`=?, `descr`=? WHERE `id`=?;';
         $stmt = $this->dbConnection->prepare($query);
         if ($stmt) {
@@ -41,78 +44,93 @@ class Books extends DBConfig {
             $stmt->execute();
             if (!$stmt->error) {
                 return TRUE;
-            } else {
-                return FALSE;
             }
         }
+        return FALSE;
     }
 
     public function deleteBook($id) {
-
-        $query = "DELETE FROM `books` where `id`=?;";
+        $query = "DELETE FROM `books` WHERE `id`=?;";
         $stmt = $this->dbConnection->prepare($query);
         if ($stmt) {
             $stmt->bind_param('i', $id);
             $stmt->execute();
             if (!$stmt->error) {
                 return TRUE;
-            } else {
-                return FALSE;
             }
         }
+        return FALSE;
     }
 
     public function getBookDescrById($id) {
-        $query = "SELECT `descr` FROM `books` WHERE `id` = " . $id . ";";
-        $result = $this->dbConnection->query($query);
-
-        if ($result == TRUE) {
-            return mysqli_fetch_all($result, MYSQLI_ASSOC);
-        } else {
-            return false;
+        $query = "SELECT `descr` FROM `books` WHERE `id`=?;";
+        $stmt = $this->dbConnection->prepare($query);
+        $result = array();
+        if ($stmt) {
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            if (!$stmt->error) {
+                $stmt->bind_result($result['descr']);
+                $rows = [];
+                while ($stmt->fetch()) {
+                    $rows[] = $result;
+                }
+                return $rows;
+            }
         }
+        return FALSE;
     }
 
     public function getBookById($id) {
         $query = 'SELECT `id`,`title`,`author` FROM `books` WHERE `id`=?;';
         $stmt = $this->dbConnection->prepare($query);
+        $result = array();
         if ($stmt) {
             $stmt->bind_param('i', $id);
             $stmt->execute();
             if (!$stmt->error) {
-                $result = $stmt->get_result();
-                return mysqli_fetch_all($result, MYSQLI_ASSOC);
-            } else {
-                return FALSE;
+                $stmt->bind_result($result['id'], $result['author'], $result['title']);
+                $rows = [];
+                while ($stmt->fetch()) {
+                    $rows[] = $result;
+                }
+                return $rows;
             }
         }
+        return FALSE;
     }
 
     public function getWholeBookById($id) {
-        $query = 'SELECT * FROM `books` WHERE `id`=?;';
+        $query = 'SELECT `id`,`author`,`title`,`descr` FROM `books` WHERE `id`=?;';
         $stmt = $this->dbConnection->prepare($query);
+        $result = array();
         if ($stmt) {
             $stmt->bind_param('i', $id);
             $stmt->execute();
             if (!$stmt->error) {
-                $result = $stmt->get_result();
-                return mysqli_fetch_all($result, MYSQLI_ASSOC);
-            } else {
-                return FALSE;
+                $stmt->bind_result($result['id'], $result['author'], $result['title'], $result['descr']);
+                $rows = [];
+                while ($stmt->fetch()) {
+                    $rows[] = $result;
+                }
+                return $rows;
             }
         }
+        return FALSE;
     }
 
-    public
-            function getAllBooks() {
+    public function getAllBooks() {
         $query = "SELECT `id`,`title`,`author` FROM `books`;";
 
         $result = $this->dbConnection->query($query);
         if ($result == TRUE) {
-            return mysqli_fetch_all($result, MYSQLI_ASSOC);
-        } else {
-            return false;
+            $rows = [];
+            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+                $rows[] = $row;
+            }
+            return $rows;
         }
+        return FALSE;
     }
 
 }
