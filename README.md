@@ -1,6 +1,6 @@
 ## **REST-API** exercise at <a target="_blank" href="http://coderslab.pl">CodersLab</a> **BACK-END Developer** training
 
-working example at [Book Library](http://geomysiar.pl/books/)
+working example at [Book Library](http://geomysiar.pl/books/){:target="_blank"}
 
 ![img1](_aux/Screen Shot 2016-09-14 at 08.04.33.png)
 
