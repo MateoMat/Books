@@ -1,4 +1,4 @@
-## **REST-API** exercise at <a target="_new_window_" href="http://coderslab.pl">CodersLab</a> **BACK-END Developer** training
+## **REST-API** exercise at <a target="_blank" href="http://coderslab.pl">CodersLab</a> **BACK-END Developer** training
 
 working example at [Book Library](http://geomysiar.pl/books/)
 
