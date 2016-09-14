@@ -23,10 +23,10 @@ class Books extends DBConfig {
     }
 
     public function addBook($author, $title, $descr) {
-        $query = 'INSERT INTO `books`(`title`, `author`, `descr`) VALUES(?,?,?);';
+        $query = 'INSERT INTO `books`(`author`, `title`,`descr`) VALUES(?,?,?);';
         $stmt = $this->dbConnection->prepare($query);
         if ($stmt) {
-            $stmt->bind_param('sss', $title, $author, $descr);
+            $stmt->bind_param('sss', $author, $title, $descr);
             $stmt->execute();
             if (!$stmt->error) {
                 return $stmt->insert_id;
@@ -37,10 +37,10 @@ class Books extends DBConfig {
 
     public function editBook($id, $author, $title, $descr) {
 
-        $query = 'UPDATE `books` SET `title`=?, `author`=?, `descr`=? WHERE `id`=?;';
+        $query = 'UPDATE `books` SET `author`=?, `title`=?, `descr`=? WHERE `id`=?;';
         $stmt = $this->dbConnection->prepare($query);
         if ($stmt) {
-            $stmt->bind_param('sssi', $title, $author, $descr, $id);
+            $stmt->bind_param('sssi', $author, $title, $descr, $id);
             $stmt->execute();
             if (!$stmt->error) {
                 return TRUE;
@@ -82,7 +82,7 @@ class Books extends DBConfig {
     }
 
     public function getBookById($id) {
-        $query = 'SELECT `id`,`title`,`author` FROM `books` WHERE `id`=?;';
+        $query = 'SELECT `id`,`author`,`title` FROM `books` WHERE `id`=?;';
         $stmt = $this->dbConnection->prepare($query);
         $result = array();
         if ($stmt) {
@@ -120,7 +120,7 @@ class Books extends DBConfig {
     }
 
     public function getAllBooks() {
-        $query = "SELECT `id`,`title`,`author` FROM `books`;";
+        $query = "SELECT `id`,`author`,`title` FROM `books`;";
 
         $result = $this->dbConnection->query($query);
         if ($result == TRUE) {
