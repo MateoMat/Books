@@ -30,7 +30,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 $author = $_POST['uauthor'];
                 $title = $_POST['utitle'];
                 $descr = $_POST['udescr'];
-                echo json_encode($books->editBook($id, $author, $title, $descr));
+                echo json_encode($books->updateBook($id, $author, $title, $descr));
             }
         }
 
@@ -47,17 +47,17 @@ switch ($_SERVER['REQUEST_METHOD']) {
             if (!empty($_GET['descr_id'])) {
                 // return book description on More button click
 
-                echo json_encode($books->getBookDescrById($_GET['descr_id']));
+                echo json_encode($books->getBookDescription($_GET['descr_id']));
             }
             if (!empty($_GET['new_id'])) {
                 // return new book from db to append it to HTML
 
-                echo json_encode($books->getBookById($_GET['new_id']));
+                echo json_encode($books->getBookMin($_GET['new_id']));
             }
             if (!empty($_GET['edit_id'])) {
                 // return whole book for edit dialog
 
-                echo json_encode($books->getWholeBookById($_GET['edit_id']));
+                echo json_encode($books->getBookAll($_GET['edit_id']));
             }
         }
         break;

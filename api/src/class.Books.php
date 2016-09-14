@@ -8,8 +8,8 @@ class Books extends DBConfig {
 
     public function __construct() {
         $this->dbConnection = new mysqli($this->server, $this->user, $this->password, $this->database);
-// VERY IMPORTANT !!!
-// fix problem on encoding and json_encode returning error 5
+        /* VERY IMPORTANT !!!
+          fix problem on encoding & json_encode returning error 5 */
         $this->dbConnection->set_charset("utf8");
 
         if ($this->dbConnection->connect_error) {
@@ -22,6 +22,14 @@ class Books extends DBConfig {
         $this->dbConnection = null;
     }
 
+    /**
+     * addBook - add new book to DB
+     * 
+     * @param string $author
+     * @param string $title
+     * @param string $descr
+     * @return boolean FALSE if fails | int book id
+     */
     public function addBook($author, $title, $descr) {
         $query = 'INSERT INTO `books`(`author`, `title`,`descr`) VALUES(?,?,?);';
         $stmt = $this->dbConnection->prepare($query);
@@ -35,7 +43,16 @@ class Books extends DBConfig {
         return FALSE;
     }
 
-    public function editBook($id, $author, $title, $descr) {
+    /**
+     * updateBook - update book in DB
+     * 
+     * @param int $id
+     * @param string $author
+     * @param string $title
+     * @param string $descr
+     * @return boolean
+     */
+    public function updateBook($id, $author, $title, $descr) {
 
         $query = 'UPDATE `books` SET `author`=?, `title`=?, `descr`=? WHERE `id`=?;';
         $stmt = $this->dbConnection->prepare($query);
@@ -49,6 +66,12 @@ class Books extends DBConfig {
         return FALSE;
     }
 
+    /**
+     * deleteBook - remove book from DB
+     * 
+     * @param int $id
+     * @return boolean
+     */
     public function deleteBook($id) {
         $query = "DELETE FROM `books` WHERE `id`=?;";
         $stmt = $this->dbConnection->prepare($query);
@@ -62,7 +85,13 @@ class Books extends DBConfig {
         return FALSE;
     }
 
-    public function getBookDescrById($id) {
+    /**
+     * getBookDescription - return book description from DB
+     * 
+     * @param int $id
+     * @return boolean|array
+     */
+    public function getBookDescription($id) {
         $query = "SELECT `descr` FROM `books` WHERE `id`=?;";
         $stmt = $this->dbConnection->prepare($query);
         $result = array();
@@ -81,7 +110,13 @@ class Books extends DBConfig {
         return FALSE;
     }
 
-    public function getBookById($id) {
+    /**
+     * getBookMin - return id, author, title (min book info) from DB
+     * 
+     * @param int $id
+     * @return boolean|array
+     */
+    public function getBookMin($id) {
         $query = 'SELECT `id`,`author`,`title` FROM `books` WHERE `id`=?;';
         $stmt = $this->dbConnection->prepare($query);
         $result = array();
@@ -100,7 +135,13 @@ class Books extends DBConfig {
         return FALSE;
     }
 
-    public function getWholeBookById($id) {
+    /**
+     * getBookAll - returns id,author,titel,descr (all book info) from DB
+     * 
+     * @param int $id
+     * @return boolean|array
+     */
+    public function getBookAll($id) {
         $query = 'SELECT `id`,`author`,`title`,`descr` FROM `books` WHERE `id`=?;';
         $stmt = $this->dbConnection->prepare($query);
         $result = array();
@@ -119,6 +160,11 @@ class Books extends DBConfig {
         return FALSE;
     }
 
+    /**
+     * getAllBooks - return all books from DB
+     * 
+     * @return boolean|array
+     */
     public function getAllBooks() {
         $query = "SELECT `id`,`author`,`title` FROM `books`;";
 
