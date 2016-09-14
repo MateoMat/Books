@@ -103,6 +103,10 @@ $(function() {
             var book = [];
             var ret;
              $.ajax({
+                 // async : false - to allow to get whole book from db before opening edit dialog
+                 // nothing else will be happening at the same time as whole page is locked for Edit Book dialog
+                 // in any other case callback function would be used for getting data from ajax for further processing
+                async: false,
                 url: 'api/books.php',
                 type: 'GET',
                 dataType: 'json',
@@ -155,6 +159,31 @@ $(function() {
                         }
                 });
         }
+        
+        editBook( id, author, title, descr ) {
+            var $this = this;
+            $.ajax({
+                type: 'POST',
+                        url: 'api/books.php',
+                        data: {
+                            uid : id,
+                            uauthor : author,
+                            utitle : title,
+                            udescr : descr
+                        },
+                        success: function (data, status) {
+                            // data contains inserted record number returned
+                            //$this.getBook(data);
+                            $this.updateHtmlBook(id, author, title);
+                        }
+                }); 
+        }
+        
+        updateHtmlBook( id, author, title ){
+            var $par = $('books div[data-id="' + id +'"]');
+            $par.find('h3.panel-title').text(title + ' - ' + author );
+        }
+        
     }
 
     function closeAllDetails() {
@@ -262,7 +291,10 @@ $(function() {
      $('books').on('click', 'button.button_edit', function() {
           var $par = $(this).parent('div').parent('div').parent('div');
           var book_id = $par.data('id');
-          var book = books.getBook4Edit( book_id );
+          
+//          $().ajaxStop();
+          var book = books.getBook4Edit( book_id ); 
+                   
           
     var $editDlg = bootbox.dialog({
                 title: MSG_EDIT_TITLE,
@@ -305,16 +337,17 @@ $(function() {
                         className: "btn-danger",
                             callback: function () {
                                 var author = $('#inp_edit_book_author').val();
-                                var title = $('#inp_edit_book_title');
-                                var descr = $('#ta_edit_book_descr');
+                                var title = $('#inp_edit_book_title').val();
+                                var descr = $('#ta_edit_book_descr').val();
                                 console.log('BTN_SAVE : ' + author);
-                                                                
+                                books.editBook( book_id, author, title, descr );                                  
                             }
                         }
                     
                     }
                 }
         ).bind('shown.bs.modal', function(){
+            
             $editDlg.find('input#inp_edit_book_author').val(book['author']);
             $editDlg.find('input#inp_edit_book_title').val(book['title']);
             $editDlg.find('textarea#ta_edit_book_descr').val(book['descr']);

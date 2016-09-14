@@ -30,8 +30,21 @@ class Books extends DBConfig {
         }
     }
 
-    public function editBook() {
-
+    public function editBook($id, $author, $title, $descr) {
+        /*
+         * UPDATE `books` SET `id`=[value-1],`title`=[value-2],`author`=[value-3],`descr`=[value-4] WHERE 1
+         */
+        $query = 'UPDATE `books` SET `title`=?, `author`=?, `descr`=? WHERE `id`=?;';
+        $stmt = $this->dbConnection->prepare($query);
+        if ($stmt) {
+            $stmt->bind_param('sssi', $title, $author, $descr, $id);
+            $stmt->execute();
+            if (!$stmt->error) {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        }
     }
 
     public function deleteBook($id) {
@@ -50,7 +63,7 @@ class Books extends DBConfig {
     }
 
     public function getBookDescrById($id) {
-        $query = "SELECT `descr` FROM `books` where `id` = " . $id . ";";
+        $query = "SELECT `descr` FROM `books` WHERE `id` = " . $id . ";";
         $result = $this->dbConnection->query($query);
 
         if ($result == TRUE) {
