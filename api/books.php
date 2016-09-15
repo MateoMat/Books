@@ -1,5 +1,7 @@
 <?php
 
+header("Access-Control-Allow-Origin: *");
+
 require 'src/class.Books.php';
 
 switch ($_SERVER['REQUEST_METHOD']) {
@@ -10,20 +12,23 @@ switch ($_SERVER['REQUEST_METHOD']) {
         if (count($_POST) == 0) {
 
             // do absolutely nothing as no data is passed on
-        } else {
+        }
+        else {
             if (!empty($_POST['del_id'])) {
                 // delete book with del_id
 
                 $id = $_POST['del_id'];
                 $books->deleteBook($id);
-            } elseif (!empty($_POST['author']) && !empty($_POST['title']) && !empty($_POST['descr'])) {
+            }
+            elseif (!empty($_POST['author']) && !empty($_POST['title']) && !empty($_POST['descr'])) {
                 // add new book
 
                 $author = $_POST['author'];
                 $title = $_POST['title'];
                 $descr = $_POST['descr'];
                 echo json_encode($books->addBook($author, $title, $descr));
-            } elseif (!empty($_POST['uid']) && !empty($_POST['uauthor']) && !empty($_POST['utitle']) && !empty($_POST['udescr'])) {
+            }
+            elseif (!empty($_POST['uid']) && !empty($_POST['uauthor']) && !empty($_POST['utitle']) && !empty($_POST['udescr'])) {
                 // update existing book
 
                 $id = $_POST['uid'];
@@ -43,7 +48,8 @@ switch ($_SERVER['REQUEST_METHOD']) {
             // return all books for main screen
 
             echo json_encode($books->getAllBooks());
-        } else {
+        }
+        else {
             if (!empty($_GET['descr_id'])) {
                 // return book description on More button click
 

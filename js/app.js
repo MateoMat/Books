@@ -341,6 +341,10 @@ $(function () {
             $editDlg.find('input#inp_edit_book_author').val(book['author']);
             $editDlg.find('input#inp_edit_book_title').val(book['title']);
             $editDlg.find('textarea#ta_edit_book_descr').val(book['descr']);
+
+            var dlgWidth = $editDlg.children(":first").width();
+            var xPos = $editDlg.find('textarea#ta_edit_book_descr').position().left;
+            $editDlg.find('textarea#ta_edit_book_descr').width(dlgWidth - (4 * xPos));
         });
     });
 
