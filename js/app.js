@@ -32,7 +32,6 @@ $(function () {
             this.limit = 1;
             // initial number of books to load
             this.initialN = 5;
-            console.log('O:L:IN ' + this.offset + ":" + this.limit + ":" + this.initialN);
         }
 
         /**
@@ -100,7 +99,6 @@ $(function () {
                 },
             }).done(function (books) {
                 $this.offset += $this.initialN;
-                console.log('createBookListHTML : ' + $this.offset)
                 for (var i = 0; i < books.length; i++) {
                     $this.addBookToHTMLTmpl(books[i]);
                 }
@@ -116,7 +114,6 @@ $(function () {
          */
         infBookScroll() {
             this.offset += this.limit;
-            console.log('infBookScroll : ' + this.offset);
             return  $.ajax({
                 url: 'api/books.php',
                 type: 'GET',
