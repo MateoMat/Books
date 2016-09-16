@@ -18,28 +18,36 @@ $(function () {
     var MSG_DEL_TITLE = "Removing book";
     var MSG_DEL_MSG = "Are you sure that you want to remove this book ?";
     var MSG_EDIT_TITLE = "Edit Book";
-    var INITIAL_NUMBER_OF_BOOKS = 5;
 
 
-    // variable to store offset for already loaded books
-    var OFFSET = 0;
+
+
 
     class Books {
 
-        constructor() {}
+        constructor() {
+            // variable to store offset for already loaded books
+            this.offset = 0;
+            // number of books to be loaded at once on inf sroll
+            this.limit = 1;
+            // initial number of books to load
+            this.initialN = 5;
+        }
 
-        // add Book to HTML using common template for JS and PHP
-        // boolean prepend
-        //    TRUE = prepend
-        //    FALSE = append
+        /**
+         * add Book to HTML using common template for JS and PHP
+         *      
+         *      
+         * @param {array} book
+         * @param {boolean} prepend (TRUE = prepend, FALSE = append)
+         * @returns {undefined}
+         */
         addBookToHTMLTmpl(book, prepend = false) {
             var template = $("#booksTmpl").html();
-
             // add button names to Template
             book['BTN_MORE'] = BTN_MORE;
             book['BTN_EDIT'] = BTN_EDIT;
             book['BTN_DEL'] = BTN_DEL;
-
             var newEl = Mustache.render(template, book);
             if (prepend) {
                 $('books').prepend(newEl);
@@ -51,44 +59,77 @@ $(function () {
             closeAllBookMoreHTML();
         }
 
-        // create Book list in HTML
-        createBookListHTML() {
-            var $this = this;
-            $.ajax({
-                url: 'api/books.php',
-                type: 'GET',
-                dataType: 'json'
-            }).done(function (books) {
-                for (var i = 0; i < books.length; i++) {
-                    $this.addBookToHTMLTmpl(books[i]);
-                }
-                $('books div.panel-body').hide();
-                $(window).bind('scroll');
-            });
-        }
+        /**
+         * NOT USED
+         * create All Book list in HTML 
+         * 
+         * @returns {undefined}
+         */
+        /*
+         createBookAllListHTML() {
+         var $this = this;
+         $.ajax({
+         url: 'api/books.php',
+         type: 'GET',
+         dataType: 'json'
+         }).done(function (books) {
+         for (var i = 0; i < books.length; i++) {
+         $this.addBookToHTMLTmpl(books[i]);
+         }
+         $('books div.panel-body').hide();
+         $(window).bind('scroll');
+         });
+         }
+         */
 
-        // create Book list in HTML with offset and limit for DB
-        createBookListHTML_OL(offset, limit) {
+        /**
+         * create Book list in HTML with offset and limit for DB
+         * 
+         * @returns {undefined}
+         */
+        createBookListHTML() {
             var $this = this;
             $.ajax({
                 url: 'api/books.php',
                 type: 'GET',
                 dataType: 'json',
                 data: {
-                    o: offset,
-                    l: limit
+                    o: this.offset,
+                    l: this.initialN
                 },
             }).done(function (books) {
                 for (var i = 0; i < books.length; i++) {
                     $this.addBookToHTMLTmpl(books[i]);
                 }
                 $('books div.panel-body').hide();
-                OFFSET += limit;
-                console.log(OFFSET);
+                this.offset += this.initialN;
             });
         }
 
-        // get Book description from database for id
+        /**
+         * infinite Book scroll
+         * 
+         * @returns {array}
+         */
+        infBookScroll() {
+            this.offset += this.limit;
+            return  $.ajax({
+                url: 'api/books.php',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    o: this.offset,
+                    l: this.limit
+                },
+            });
+        }
+
+        /*
+         * get Book description from database for id
+         * 
+         * @param {int} book_id
+         * @returns {undefined}
+         */
         getBookDescription(book_id) {
             var $this = this;
             var descr = "";
@@ -104,7 +145,14 @@ $(function () {
             });
         }
 
-        // get Book from database (id,author,title) for id
+        // 
+        /**
+         * get Book from database (id,author,title) for id
+         * 
+         * @param {int} book_id
+         * @param {boolean} prepend
+         * @returns {undefined}
+         */
         getBookMin(book_id, prepend) {
             var $this = this;
             var descr = "";
@@ -120,36 +168,73 @@ $(function () {
             });
         }
 
-        // get all book information for editing
-        getBook4Edit(book_id) {
-            var $this = this;
-            var book = [];
-            var ret;
-            $.ajax({
-                // async : false - to allow to get whole book from db before opening edit dialog
-                // nothing else will be happening at the same time as whole page is locked for Edit Book dialog
-                // in any other case callback function would be used for getting data from ajax for further processing
-                async: false,
+        /**
+         * get all book info for single book
+         * 
+         * @param {int} book_id
+         * @returns {jqXHR}
+         */
+        getAllBookInfo(book_id) {
+            return  $.ajax({
                 url: 'api/books.php',
                 type: 'GET',
                 dataType: 'json',
                 data: {
                     edit_id: book_id
                 },
-            }).done(function (books) {
-                book['title'] = books[0].title;
-                book['author'] = books[0].author;
-                book['descr'] = books[0].descr;
             });
-            return book;
+
         }
 
-        // removing HTML element for deleted Book from <books>
+        /**
+         * NOT USED
+         * 
+         * get all book information for editing
+         * 
+         * @param {int} book_id
+         * @returns {Array|appL#1.Books.getBook4Edit.book}
+         */
+        /*
+         getBook4Edit(book_id) {
+         var $this = this;
+         var book = [];
+         var ret;
+         $.ajax({
+         // async : false - to allow to get whole book from db before opening edit dialog
+         // nothing else will be happening at the same time as whole page is locked for Edit Book dialog
+         // in any other case callback function would be used for getting data from ajax for further processing
+         async: false,
+         url: 'api/books.php',
+         type: 'GET',
+         dataType: 'json',
+         data: {
+         edit_id: book_id
+         },
+         }).done(function (books) {
+         book['title'] = books[0].title;
+         book['author'] = books[0].author;
+         book['descr'] = books[0].descr;
+         });
+         return book;
+         }
+         */
+
+        /**
+         * removing HTML element for deleted Book from <books>
+         * 
+         * @param {int} book_id
+         * @returns {undefined}
+         */
         removeBookHTML(book_id) {
             $('books div[data-id="' + book_id + '"]').remove();
         }
 
-        // remove Book from database
+        /**
+         * remove Book from database
+         * 
+         * @param {int} book_id
+         * @returns {undefined}
+         */
         deleteBook(book_id) {
             var $this = this;
             $.ajax({
@@ -164,7 +249,15 @@ $(function () {
             });
         }
 
-        // add Book to database
+        /**
+         * add Book to database
+         * 
+         * @param {string} author
+         * @param {string} title
+         * @param {string} descr
+         * @param {boolean} prepend
+         * @returns {undefined}
+         */
         addBook(author, title, descr, prepend) { // the same var names for POST
             var $this = this;
             $.ajax({
@@ -182,7 +275,16 @@ $(function () {
             });
         }
 
-        editBook(id, author, title, descr) {
+        /**
+         * update book in DB after edit
+         * 
+         * @param {int} id
+         * @param {string} author
+         * @param {string} title
+         * @param {string} descr
+         * @returns {undefined}
+         */
+        updateBook(id, author, title, descr) {
             var $this = this;
             $.ajax({
                 type: 'POST',
@@ -201,19 +303,40 @@ $(function () {
             });
         }
 
+        /**
+         * update HTML for edited book
+         * 
+         * @param {int} id
+         * @param {string} author
+         * @param {string} title
+         * @returns {undefined}
+         */
         updateBookHTML(id, author, title) {
             var $par = $('books div[data-id="' + id + '"]');
             $par.find('h3.panel-title').text(title + ' - ' + author);
         }
 
+        // end class definition
+
     }
 
+
+    /**
+     * close Book Details element for all books
+     * 
+     * @returns {undefined}
+     */
     function closeAllBookMoreHTML() {
         // first change all button names to MORE        
         $('books div.panel-body').hide();
         $('books button.button_more').text(BTN_MORE);
     }
 
+    /**
+     * empty all form inputs after book is added
+     * 
+     * @returns {undefined}
+     */
     function cleanAddBookFormHTML() {
         $('input#inp_add_book_author').val("");
         $('input#inp_add_book_title').val("");
@@ -221,15 +344,17 @@ $(function () {
     }
 
 
+    // setting page Title
+    $('head title').text(PAGE_TITLE);
+
     // hide pagination
     $('div.pagination').hide();
 
     var books = new Books();
-    //books.createBookListHTML();
-    books.createBookListHTML_OL(OFFSET, INITIAL_NUMBER_OF_BOOKS);
+
+    books.createBookListHTML();
 
     $('div#add_book_title h3').text(FORM_ADD_BOOK_TITLE);
-
     $('label#lbl_add_book_author').text(LABEL_AUTHOR);
     $('label#lbl_add_book_title').text(LABEL_TITLE);
     $('label#lbl_add_book_descr').text(LABEL_DESCR);
@@ -240,7 +365,6 @@ $(function () {
         var author = $('input#inp_add_book_author').val();
         var title = $('input#inp_add_book_title').val();
         var descr = $('textarea#ta_add_book_descr').val();
-
         if (author.length == 0) {
             bootbox.alert(MSG_AUTHOR);
             return false;
@@ -260,12 +384,14 @@ $(function () {
         cleanAddBookFormHTML();
     });
 
-    // event to remove Book
+
+    /*
+     * Remove Book event
+     */
     $('books').on('click', 'button.button_del', function () {
 
         var $par = $(this).parent('div').parent('div').parent('div');
         var book_id = $par.data('id');
-
         bootbox.dialog({
             message: MSG_DEL_MSG + '<br><strong>' + $par.find('h3').text() + '</strong>',
             title: MSG_DEL_TITLE,
@@ -290,21 +416,20 @@ $(function () {
     });
 
 
-    // event to open Book Details 
+    /*
+     * Book Details event (opens hidden HTML)
+     */
     $('books').on('click', 'button.button_more', function () {
 
         var $par = $(this).parent('div').parent('div').parent('div');
         var book_id = $par.data('id');
-
         if ($(this).text() == BTN_MORE) {
             // get book description from db by ajax call
             books.getBookDescription(book_id);
             // show element with description
             $par.find('div.panel-body').show();
-
             // change button name :)
             $(this).text(BTN_CLOSE);
-
         } else if ($(this).text() == BTN_CLOSE) {
             // close
             $par.find('div.panel-body').hide();
@@ -313,110 +438,93 @@ $(function () {
         }
     });
 
-    // event to edit Book
+    /*
+     * Book Edit event
+     */
     $('books').on('click', 'button.button_edit', function () {
         var $par = $(this).parent('div').parent('div').parent('div');
         var book_id = $par.data('id');
 
-//          $().ajaxStop();
-        var book = books.getBook4Edit(book_id);
 
+        $.when(books.getAllBookInfo(book_id)).done(function (bookArr) {
+            var book = bookArr[0];
 
-        var $editDlg = bootbox.dialog({
-            title: MSG_EDIT_TITLE,
-            message:
-                    '<div class="row">  ' +
-                    '<div class="col-md-12"> ' +
-                    '<form class="form-horizontal"> ' +
-                    '<div class="form-group"> ' +
-                    '<label class="col-md-2 control-label">' + LABEL_AUTHOR + '</label> ' +
-                    '<div class="col-md-6"> ' +
-                    '<input id="inp_edit_book_author" type="text" class="form-control input-md"> ' +
-                    '</div> ' +
-                    '</div>' +
-                    '<div class="form-group"> ' +
-                    '<label class="col-md-2 control-label">' + LABEL_TITLE + '</label> ' +
-                    '<div class="col-md-6"> ' +
-                    '<input id="inp_edit_book_title" type="text" class="form-control input-md"> ' +
-                    '</div> ' +
-                    '</div>' +
-                    '<div class="form-group"> ' +
-                    '<label class="col-md-2 control-label">' + LABEL_DESCR + '</label> ' +
-                    '</div>' +
-                    '<div class="col-md-2"> ' +
-                    '<textarea id="ta_edit_book_descr" class=""></textarea>' +
-                    '</div>' +
-                    '</form> </div>  </div>',
-            buttons: {
-                cancel: {
-                    label: BTN_CANCEL,
-                    className: "btn-success",
-                    callback: function () {
-                        // do nothing
+            var $editDlg = bootbox.dialog({
+                title: MSG_EDIT_TITLE,
+                message:
+                        '<div class="row">  ' +
+                        '<div class="col-md-12"> ' +
+                        '<form class="form-horizontal"> ' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-md-2 control-label">' + LABEL_AUTHOR + '</label> ' +
+                        '<div class="col-md-6"> ' +
+                        '<input id="inp_edit_book_author" type="text" class="form-control input-md"> ' +
+                        '</div> ' +
+                        '</div>' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-md-2 control-label">' + LABEL_TITLE + '</label> ' +
+                        '<div class="col-md-6"> ' +
+                        '<input id="inp_edit_book_title" type="text" class="form-control input-md"> ' +
+                        '</div> ' +
+                        '</div>' +
+                        '<div class="form-group"> ' +
+                        '<label class="col-md-2 control-label">' + LABEL_DESCR + '</label> ' +
+                        '</div>' +
+                        '<div class="col-md-2"> ' +
+                        '<textarea id="ta_edit_book_descr" class=""></textarea>' +
+                        '</div>' +
+                        '</form> </div>  </div>',
+                buttons: {
+                    cancel: {
+                        label: BTN_CANCEL,
+                        className: "btn-success",
+                        callback: function () {
+                            // do nothing
+                        }
+                    },
+                    save: {
+                        label: BTN_SAVE,
+                        className: "btn-danger",
+                        callback: function () {
+                            var author = $('#inp_edit_book_author').val();
+                            var title = $('#inp_edit_book_title').val();
+                            var descr = $('#ta_edit_book_descr').val();
+                            books.updateBook(book_id, author, title, descr);
+                        }
                     }
-                },
-                save: {
-                    label: BTN_SAVE,
-                    className: "btn-danger",
-                    callback: function () {
-                        var author = $('#inp_edit_book_author').val();
-                        var title = $('#inp_edit_book_title').val();
-                        var descr = $('#ta_edit_book_descr').val();
-                        console.log('BTN_SAVE : ' + author);
-                        books.editBook(book_id, author, title, descr);
-                    }
+
                 }
-
             }
-        }
-        ).bind('shown.bs.modal', function () {
+            ).bind('shown.bs.modal', function () {
 
-            $editDlg.find('input#inp_edit_book_author').val(book['author']);
-            $editDlg.find('input#inp_edit_book_title').val(book['title']);
-            $editDlg.find('textarea#ta_edit_book_descr').val(book['descr']);
+                $editDlg.find('input#inp_edit_book_author').val(book['author']);
+                $editDlg.find('input#inp_edit_book_title').val(book['title']);
+                $editDlg.find('textarea#ta_edit_book_descr').val(book['descr']);
+                var dlgWidth = $editDlg.children(":first").width();
+                var xPos = $editDlg.find('textarea#ta_edit_book_descr').position().left;
+                $editDlg.find('textarea#ta_edit_book_descr').width(dlgWidth - (4 * xPos));
+            });
 
-            var dlgWidth = $editDlg.children(":first").width();
-            var xPos = $editDlg.find('textarea#ta_edit_book_descr').position().left;
-            $editDlg.find('textarea#ta_edit_book_descr').width(dlgWidth - (4 * xPos));
         });
     });
 
-    function infBook() {
-        var limit = 1;
-        OFFSET += limit;
-        return  $.ajax({
-            url: 'api/books.php',
-            type: 'GET',
-            dataType: 'json',
-            data: {
-                o: OFFSET,
-                l: limit
-            },
-        });
-    }
 
-
+    /**
+     *  scroll event for inf scroll
+     */
     $(window).scroll(function (event) {
 
-        if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
-            var $this = this;
-            $.when(infBook()).done(function (b) {
+        var $win = $(window);
+        if ($win.height() + $win.scrollTop() == $(document).height()) {
+
+            $.when(books.infBookScroll()).done(function (b) {
                 for (var i = 0; i < b.length; i++) {
                     books.addBookToHTMLTmpl(b[i]);
                 }
                 $('books div.panel-body').hide();
             });
-
-
-            //$(window).unbind('scroll');
-//            console.log('scroll down');
-//            books.createBookListHTML_OL(OFFSET, 1);
         }
     });
 
-
-
-    // setting page Title
-    $('head title').text(PAGE_TITLE);
 // end of APP    
 });
