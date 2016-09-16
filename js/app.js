@@ -33,7 +33,7 @@ $(function () {
             book['BTN_DEL'] = BTN_DEL;
 
             var newEl = Mustache.render(template, book);
-            $('books').append(newEl);
+            $('books').prepend(newEl);
             closeAllBookMoreHTML();
         }
 
@@ -80,7 +80,7 @@ $(function () {
                     new_id: book_id
                 },
             }).done(function (books) {
-                $this.addBookToHTML(books[0])
+                $this.addBookToHTMLTmpl(books[0])
             });
         }
 
