@@ -6,6 +6,7 @@ working example at [Book Library](http://geomysiar.pl/books/)
  * [Bootstrap] (http://getbootstrap.com)
  * [Bootstrap SB Admin Template](https://startbootstrap.com/template-overviews/sb-admin/)
  * [Bootstrap modals made easy] (http://bootboxjs.com)
+ * [Mustache] (http://mustache.github.io)
 
 ![img1](_aux/Screen Shot 2016-09-14 at 08.04.33.png)
 
