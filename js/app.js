@@ -185,6 +185,9 @@ $(function () {
     }
 
 
+    // hide pagination
+    $('div.pagination').hide();
+
     var books = new Books();
     books.createBookListHTML();
 

@@ -62,22 +62,23 @@
         </row>-->
     <books></books>
 
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-6 col-md-offset-3 pagination">
 
         <?php
         // pagination
-//        echo "PAGINATION<br>";
-//        require_once 'api/src/class.Books.php';
-//        $books = new Books();
-//        $count = $books->getBookCount();
-//
-//
-//
-//        $numberOfBooksPerPage = 10;
-//
-//        for ($i = 0; $i < $count / $numberOfBooksPerPage; $i++) {
-//            echo "offset :" . $i * $numberOfBooksPerPage . " limit : " . $numberOfBooksPerPage . "<br>";
-//        }
+        echo "PAGINATION<br>";
+        require_once 'api/src/class.Books.php';
+        $books = new Books();
+        $count = $books->getBookCount();
+
+        $numberOfBooksPerPage = 10;
+
+        for ($i = 0; $i < $count / $numberOfBooksPerPage; $i++) {
+            //echo "offset :" . $i * $numberOfBooksPerPage . " limit : " . $numberOfBooksPerPage . "<br>";
+            $pageNumber = $i + 1;
+            $offset = $i * $numberOfBooksPerPage;
+            echo "<a href=\"api/page.php?o={$offset}&l={$numberOfBooksPerPage}\">Page-{$pageNumber}&nbsp;&nbsp;";
+        }
         ?>
 
     </div>
