@@ -100,5 +100,6 @@
     echo file_get_contents(dirname(__FILE__) . '/templates/books.mustache');
     ?>
 </script>
+
 <script src="js/app.js"></script>
 

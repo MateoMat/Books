@@ -65,6 +65,12 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
                 echo json_encode($books->getBookAll($_GET['edit_id']));
             }
+            if (count($_GET) == 2 && isset($_GET['o']) && isset($_GET['l'])) {
+                $offset = $_GET['o'];
+                $limit = $_GET['l'];
+
+                echo json_encode($books->getBooksPerPageMin($offset, $limit));
+            }
         }
         break;
 }

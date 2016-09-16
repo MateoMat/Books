@@ -18,13 +18,21 @@ $(function () {
     var MSG_DEL_TITLE = "Removing book";
     var MSG_DEL_MSG = "Are you sure that you want to remove this book ?";
     var MSG_EDIT_TITLE = "Edit Book";
+    var INITIAL_NUMBER_OF_BOOKS = 5;
+
+
+    // variable to store offset for already loaded books
+    var OFFSET = 0;
 
     class Books {
 
         constructor() {}
 
         // add Book to HTML using common template for JS and PHP
-        addBookToHTMLTmpl(book) {
+        // boolean prepend
+        //    TRUE = prepend
+        //    FALSE = append
+        addBookToHTMLTmpl(book, prepend = false) {
             var template = $("#booksTmpl").html();
 
             // add button names to Template
@@ -33,7 +41,13 @@ $(function () {
             book['BTN_DEL'] = BTN_DEL;
 
             var newEl = Mustache.render(template, book);
-            $('books').prepend(newEl);
+            if (prepend) {
+                $('books').prepend(newEl);
+            } else
+            {
+                $('books').append(newEl);
+            }
+
             closeAllBookMoreHTML();
         }
 
@@ -49,6 +63,28 @@ $(function () {
                     $this.addBookToHTMLTmpl(books[i]);
                 }
                 $('books div.panel-body').hide();
+                $(window).bind('scroll');
+            });
+        }
+
+        // create Book list in HTML with offset and limit for DB
+        createBookListHTML_OL(offset, limit) {
+            var $this = this;
+            $.ajax({
+                url: 'api/books.php',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    o: offset,
+                    l: limit
+                },
+            }).done(function (books) {
+                for (var i = 0; i < books.length; i++) {
+                    $this.addBookToHTMLTmpl(books[i]);
+                }
+                $('books div.panel-body').hide();
+                OFFSET += limit;
+                console.log(OFFSET);
             });
         }
 
@@ -69,7 +105,7 @@ $(function () {
         }
 
         // get Book from database (id,author,title) for id
-        getBookMin(book_id) {
+        getBookMin(book_id, prepend) {
             var $this = this;
             var descr = "";
             $.ajax({
@@ -80,7 +116,7 @@ $(function () {
                     new_id: book_id
                 },
             }).done(function (books) {
-                $this.addBookToHTMLTmpl(books[0])
+                $this.addBookToHTMLTmpl(books[0], prepend)
             });
         }
 
@@ -129,7 +165,7 @@ $(function () {
         }
 
         // add Book to database
-        addBook(author, title, descr) { // the same var names for POST
+        addBook(author, title, descr, prepend) { // the same var names for POST
             var $this = this;
             $.ajax({
                 type: 'POST',
@@ -141,7 +177,7 @@ $(function () {
                 },
                 success: function (data, status) {
                     // data contains inserted record number returned
-                    $this.getBookMin(data);
+                    $this.getBookMin(data, prepend);
                 }
             });
         }
@@ -189,7 +225,8 @@ $(function () {
     $('div.pagination').hide();
 
     var books = new Books();
-    books.createBookListHTML();
+    //books.createBookListHTML();
+    books.createBookListHTML_OL(OFFSET, INITIAL_NUMBER_OF_BOOKS);
 
     $('div#add_book_title h3').text(FORM_ADD_BOOK_TITLE);
 
@@ -219,7 +256,7 @@ $(function () {
             return false;
         }
 
-        books.addBook(author, title, descr);
+        books.addBook(author, title, descr, true);
         cleanAddBookFormHTML();
     });
 
@@ -343,6 +380,41 @@ $(function () {
             $editDlg.find('textarea#ta_edit_book_descr').width(dlgWidth - (4 * xPos));
         });
     });
+
+    function infBook() {
+        var limit = 1;
+        OFFSET += limit;
+        return  $.ajax({
+            url: 'api/books.php',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                o: OFFSET,
+                l: limit
+            },
+        });
+    }
+
+
+    $(window).scroll(function (event) {
+
+        if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
+            var $this = this;
+            $.when(infBook()).done(function (b) {
+                for (var i = 0; i < b.length; i++) {
+                    books.addBookToHTMLTmpl(b[i]);
+                }
+                $('books div.panel-body').hide();
+            });
+
+
+            //$(window).unbind('scroll');
+//            console.log('scroll down');
+//            books.createBookListHTML_OL(OFFSET, 1);
+        }
+    });
+
+
 
     // setting page Title
     $('head title').text(PAGE_TITLE);

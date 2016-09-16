@@ -179,10 +179,36 @@ class Books extends DBConfig {
         return FALSE;
     }
 
-    /*     * ***************************************
+    /**
+     * Returns min books information for range offset & limit
+     * 
+     * @param type $offset
+     * @param type $limit
+     * @return boolean|array
+     */
+    public function getBooksPerPageMin($offset, $limit) {
+        $query = "SELECT `id`,`author`,`title` FROM `books` LIMIT {$limit} OFFSET $offset;";
+
+        $result = $this->dbConnection->query($query);
+        if ($result == TRUE) {
+            $rows = [];
+            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+                $rows[] = $row;
+            }
+            return $rows;
+        }
+        return FALSE;
+    }
+
+    /*
      * PAGINATION methods
      */
 
+    /**
+     * Returns number of books in DB
+     * 
+     * @return int
+     */
     public function getBookCount() {
         $count = 0;
         $query = "SELECT COUNT(*) FROM `books`;";
@@ -193,6 +219,13 @@ class Books extends DBConfig {
         return $count;
     }
 
+    /**
+     * Returns all books information for range offset & limit
+     * 
+     * @param type $offset
+     * @param type $limit
+     * @return boolean|array
+     */
     public function getBooksPerPage($offset, $limit) {
         $query = "SELECT `id`,`author`,`title`, `descr` FROM `books` LIMIT {$limit} OFFSET $offset;";
 
