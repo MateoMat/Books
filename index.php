@@ -74,10 +74,9 @@
         $numberOfBooksPerPage = 10;
 
         for ($i = 0; $i < $count / $numberOfBooksPerPage; $i++) {
-            //echo "offset :" . $i * $numberOfBooksPerPage . " limit : " . $numberOfBooksPerPage . "<br>";
             $pageNumber = $i + 1;
             $offset = $i * $numberOfBooksPerPage;
-            echo "<a href=\"api/page.php?o={$offset}&l={$numberOfBooksPerPage}\">Page-{$pageNumber}&nbsp;&nbsp;";
+            echo "<a href=\"api/page.php?o={$offset}&l={$numberOfBooksPerPage}\">Page-{$pageNumber}</a>";
         }
         ?>
 
