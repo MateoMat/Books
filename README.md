@@ -8,6 +8,7 @@ working example at [Book Library](http://geomysiar.pl/books/)
  * [Bootstrap modals made easy] (http://bootboxjs.com)
  * [Mustache] (http://mustache.github.io)
 
+
 ### Requirements
  * obtain mustache by: ***composer update*** or ***composer install***
 
