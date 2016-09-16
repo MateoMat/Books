@@ -182,8 +182,8 @@ class Books extends DBConfig {
     /**
      * Returns min books information for range offset & limit
      * 
-     * @param type $offset
-     * @param type $limit
+     * @param int $offset
+     * @param int $limit
      * @return boolean|array
      */
     public function getBooksPerPageMin($offset, $limit) {
@@ -222,8 +222,8 @@ class Books extends DBConfig {
     /**
      * Returns all books information for range offset & limit
      * 
-     * @param type $offset
-     * @param type $limit
+     * @param int $offset
+     * @param int $limit
      * @return boolean|array
      */
     public function getBooksPerPage($offset, $limit) {
