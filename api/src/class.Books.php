@@ -179,4 +179,51 @@ class Books extends DBConfig {
         return FALSE;
     }
 
+    /*     * ***************************************
+     * PAGINATION methods
+     */
+
+    public function getBookCount() {
+        $count = 0;
+        $query = "SELECT COUNT(*) FROM `books`;";
+        $result = $this->dbConnection->query($query);
+        if ($result == TRUE) {
+            $count = $result->fetch_array()[0];
+        }
+        return $count;
+    }
+
+    public function getBooksPerPage($offset, $limit) {
+        $query = "SELECT `id`,`author`,`title`, `descr` FROM `books` LIMIT {$limit} OFFSET $offset;";
+
+        $result = $this->dbConnection->query($query);
+        if ($result == TRUE) {
+            $rows = [];
+            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+                $rows[] = $row;
+            }
+            return $rows;
+        }
+        return FALSE;
+    }
+
+//    public function getBooksPerPage_NOT_WORKING($offset, $limit) {
+//        $query = 'SELECT `id`,`author`,`title`,`descr` FROM `books` LIMIT ? OFFSET ?;';
+//        $stmt = $this->dbConnection->prepare($query);
+//        $result = array();
+//        $rows = new ArrayObject();
+//        if ($stmt) {
+//            $stmt->bind_param('ii', $limit, $offset);
+//            $stmt->execute();
+//            if (!$stmt->error) {
+//                $stmt->bind_result($result['id'], $result['author'], $result['title'], $result['descr']);
+//
+//                while ($stmt->fetch()) {
+//                    $rows->append($result);
+//                }
+//                return $rows;
+//            }
+//        }
+//        return FALSE;
+//    }
 }

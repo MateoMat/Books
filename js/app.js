@@ -23,23 +23,16 @@ $(function () {
 
         constructor() {}
 
-        // add Book to HTML
-        addBookToHTML(book) {
-            var newEl = '<div class="col-md-6 col-md-offset-3" data-id="' + book.id + '">' +
-                    '<div class="panel panel-info">' +
-                    '<div class="panel-heading">' +
-                    '<h3 class="panel-title">' + book.title + ' - ' + book.author + '</h3>' +
-                    '</div>' +
-                    '<div class="panel-body">' +
-                    '</div>' +
-                    '<div class="panel-footer button_row">' +
-                    '<button class="button_more btn btn-xs btn-primary">' + BTN_MORE  + '</button>' +
-                    '<button class="button_edit btn btn-xs btn-success">' + BTN_EDIT  + '</button>' +
-                    '<button class="button_del  btn btn-xs btn-danger">' + BTN_DEL + '</button>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>';
+        // add Book to HTML using common template for JS and PHP
+        addBookToHTMLTmpl(book) {
+            var template = $("#booksTmpl").html();
 
+            // add button names to Template
+            book['BTN_MORE'] = BTN_MORE;
+            book['BTN_EDIT'] = BTN_EDIT;
+            book['BTN_DEL'] = BTN_DEL;
+
+            var newEl = Mustache.render(template, book);
             $('books').append(newEl);
             closeAllBookMoreHTML();
         }
@@ -53,7 +46,7 @@ $(function () {
                 dataType: 'json'
             }).done(function (books) {
                 for (var i = 0; i < books.length; i++) {
-                    $this.addBookToHTML(books[i]);
+                    $this.addBookToHTMLTmpl(books[i]);
                 }
                 $('books div.panel-body').hide();
             });
