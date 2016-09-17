@@ -15,13 +15,14 @@ working example at [Book Library](http://geomysiar.pl/books/)
 
 ### Working application screen shots
 
- 1. Main screen
+ * Main screen
 
 <img src="_aux/Screen Shot 2016-09-14 at 08.04.33.png" height="400">
 
- 2. Book edit
-![img1](_aux/Screen Shot 2016-09-14 at 08.04.33.png)
+ * Book edit
 
-![img2](_aux/Screen Shot 2016-09-14 at 08.04.51.png)
+<img src="_aux/Screen Shot 2016-09-14 at 08.04.51.png" height="400">
 
-![img3](_aux/Screen Shot 2016-09-14 at 08.05.02.png)
+ * Remove Book
+
+<img src="_aux/Screen Shot 2016-09-14 at 08.05.02.png" height="400">
