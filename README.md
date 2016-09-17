@@ -17,12 +17,12 @@ working example at [Book Library](http://geomysiar.pl/books/)
 
  * Main screen
 
-<img src="_aux/Screen Shot 2016-09-14 at 08.04.33.png" height="400">
+<img src="_aux/Screen Shot 2016-09-14 at 08.04.33.png" width="400">
 
  * Book edit
 
-<img src="_aux/Screen Shot 2016-09-14 at 08.04.51.png" height="400">
+<img src="_aux/Screen Shot 2016-09-14 at 08.04.51.png" width="400">
 
  * Remove Book
 
-<img src="_aux/Screen Shot 2016-09-14 at 08.05.02.png" height="400">
+<img src="_aux/Screen Shot 2016-09-14 at 08.05.02.png" width="400">
