@@ -164,6 +164,7 @@ class Books extends DBConfig {
      * Return all books prior the id
      * 
      * @param int $id
+     * @param int $limit - number of records to return from db
      * @return boolean|array
      */
     public function getBooksBeforeId($id, $limit = -1) {
@@ -174,6 +175,7 @@ class Books extends DBConfig {
      * Return all books after the id
      * 
      * @param int $id
+     * @param int $limit - number of records to return from db
      * @return boolean|array
      */
     public function getBooksAfterId($id, $limit = -1) {
@@ -295,23 +297,4 @@ class Books extends DBConfig {
         return FALSE;
     }
 
-//    public function getBooksPerPage_NOT_WORKING($offset, $limit) {
-//        $query = 'SELECT `id`,`author`,`title`,`descr` FROM `books` LIMIT ? OFFSET ?;';
-//        $stmt = $this->dbConnection->prepare($query);
-//        $result = array();
-//        $rows = new ArrayObject();
-//        if ($stmt) {
-//            $stmt->bind_param('ii', $limit, $offset);
-//            $stmt->execute();
-//            if (!$stmt->error) {
-//                $stmt->bind_result($result['id'], $result['author'], $result['title'], $result['descr']);
-//
-//                while ($stmt->fetch()) {
-//                    $rows->append($result);
-//                }
-//                return $rows;
-//            }
-//        }
-//        return FALSE;
-//    }
 }
