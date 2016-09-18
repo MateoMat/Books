@@ -166,8 +166,8 @@ class Books extends DBConfig {
      * @param int $id
      * @return boolean|array
      */
-    public function getBooksBeforeId($id) {
-        return $this->getBooksBeforeAfter($id, false);
+    public function getBooksBeforeId($id, $limit = -1) {
+        return $this->getBooksBeforeAfter($id, false, $limit);
     }
 
     /**
@@ -176,8 +176,8 @@ class Books extends DBConfig {
      * @param int $id
      * @return boolean|array
      */
-    public function getBooksAfterId($id) {
-        return $this->getBooksBeforeAfter($id, true);
+    public function getBooksAfterId($id, $limit = -1) {
+        return $this->getBooksBeforeAfter($id, true, $limit);
     }
 
     /**
@@ -185,7 +185,7 @@ class Books extends DBConfig {
      * @param int $id
      * @param boolean $param
      */
-    private function getBooksBeforeAfter($id, $param) {
+    private function getBooksBeforeAfter($id, $param, $limit) {
         if ($param) {
             // TRUE - after
             $query = "SELECT `id`,`author`,`title` FROM `books` WHERE `id` > {$id}";
@@ -194,6 +194,10 @@ class Books extends DBConfig {
             // FALSE = before
             $query = "SELECT `id`,`author`,`title` FROM `books` WHERE `id` < {$id}";
         }
+        if ($limit > 0) {
+            $query .= " LIMIT {$limit}";
+        }
+
         $result = $this->dbConnection->query($query);
         if ($result == TRUE) {
             $rows = [];
