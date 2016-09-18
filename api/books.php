@@ -51,6 +51,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         }
         else {
             if (!empty($_GET['sort'])) {
+                // return all books in id descending order
                 echo json_encode($books->getAllBooks(1));
             }
             if (!empty($_GET['descr_id'])) {
@@ -73,6 +74,16 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 $limit = $_GET['l'];
 
                 echo json_encode($books->getBooksPerPageMin($offset, $limit));
+            }
+            if (!empty($_GET['before'])) {
+                // return all boks before specified id
+                $id = $_GET['before'];
+                echo json_encode($books->getBooksBeforeId($id));
+            }
+            if (!empty($_GET['after'])) {
+                // return all boks after specified id
+                $id = $_GET['after'];
+                echo json_encode($books->getBooksAfterId($id));
             }
         }
         break;

@@ -161,8 +161,54 @@ class Books extends DBConfig {
     }
 
     /**
+     * Return all books prior the id
+     * 
+     * @param int $id
+     * @return boolean|array
+     */
+    public function getBooksBeforeId($id) {
+        return $this->getBooksBeforeAfter($id, false);
+    }
+
+    /**
+     * Return all books after the id
+     * 
+     * @param int $id
+     * @return boolean|array
+     */
+    public function getBooksAfterId($id) {
+        return $this->getBooksBeforeAfter($id, true);
+    }
+
+    /**
+     * 
+     * @param int $id
+     * @param boolean $param
+     */
+    private function getBooksBeforeAfter($id, $param) {
+        if ($param) {
+            // TRUE - after
+            $query = "SELECT `id`,`author`,`title` FROM `books` WHERE `id` > {$id}";
+        }
+        else {
+            // FALSE = before
+            $query = "SELECT `id`,`author`,`title` FROM `books` WHERE `id` < {$id}";
+        }
+        $result = $this->dbConnection->query($query);
+        if ($result == TRUE) {
+            $rows = [];
+            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+                $rows[] = $row;
+            }
+            return $rows;
+        }
+        return FALSE;
+    }
+
+    /**
      * getAllBooks - return all books from DB
      * 
+     * @param int $sort
      * @return boolean|array
      */
     public function getAllBooks($sort = 0) {
