@@ -165,8 +165,13 @@ class Books extends DBConfig {
      * 
      * @return boolean|array
      */
-    public function getAllBooks() {
-        $query = "SELECT `id`,`author`,`title` FROM `books`;";
+    public function getAllBooks($sort = 0) {
+        if ($sort != 0) {
+            $query = "SELECT `id`,`author`,`title` FROM `books` ORDER BY `id` DESC;";
+        }
+        else {
+            $query = "SELECT `id`,`author`,`title` FROM `books`;";
+        }
 
         $result = $this->dbConnection->query($query);
         if ($result == TRUE) {

@@ -50,6 +50,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
             echo json_encode($books->getAllBooks());
         }
         else {
+            if (!empty($_GET['sort'])) {
+                echo json_encode($books->getAllBooks(1));
+            }
             if (!empty($_GET['descr_id'])) {
                 // return book description on More button click
 
