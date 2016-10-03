@@ -3,18 +3,17 @@ body {
     margin-top: 0px;
 }
 
-textarea#ta_add_book_descr{
+textarea#ta_add_book_descr {
     width: 100%;
     height: 70px;
     resize: none;
 }
 
-textarea#ta_edit_book_descr{
+textarea#ta_edit_book_descr {
     width: 100%;
     height: 140px;
     resize: none;
 }
-
 
 .text-center {
     text-align: center;
@@ -30,7 +29,7 @@ textarea#ta_edit_book_descr{
 
 .button_row {
     width: 100%;
-    text-align:center;
+    text-align: center;
 }
 
 .button_more {
@@ -38,7 +37,7 @@ textarea#ta_edit_book_descr{
 }
 
 .button_del {
-    float: right;    
+    float: right;
 }
 
 .button_edit {

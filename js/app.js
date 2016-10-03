@@ -20,9 +20,6 @@ $(function () {
     var MSG_EDIT_TITLE = "Edit Book";
 
 
-
-
-
     class Books {
 
         constructor() {
@@ -36,8 +33,8 @@ $(function () {
 
         /**
          * add Book to HTML using common template for JS and PHP
-         *      
-         *      
+         *
+         *
          * @param {array} book
          * @param {boolean} prepend (TRUE = prepend, FALSE = append)
          * @returns {undefined}
@@ -51,8 +48,7 @@ $(function () {
             var newEl = Mustache.render(template, book);
             if (prepend) {
                 $('books').prepend(newEl);
-            } else
-            {
+            } else {
                 $('books').append(newEl);
             }
 
@@ -61,8 +57,8 @@ $(function () {
 
         /**
          * NOT USED
-         * create All Book list in HTML 
-         * 
+         * create All Book list in HTML
+         *
          * @returns {undefined}
          */
         /*
@@ -84,7 +80,7 @@ $(function () {
 
         /**
          * create Book list in HTML with offset and limit for DB
-         * 
+         *
          * @returns {undefined}
          */
         createBookListHTML() {
@@ -109,12 +105,12 @@ $(function () {
 
         /**
          * infinite Book scroll
-         * 
+         *
          * @returns {array}
          */
         infBookScroll() {
             this.offset += this.limit;
-            return  $.ajax({
+            return $.ajax({
                 url: 'api/books.php',
                 type: 'GET',
                 dataType: 'json',
@@ -149,7 +145,7 @@ $(function () {
         // 
         /**
          * get Book from database (id,author,title) for id
-         * 
+         *
          * @param {int} book_id
          * @param {boolean} prepend
          * @returns {undefined}
@@ -171,12 +167,12 @@ $(function () {
 
         /**
          * get all book info for single book
-         * 
+         *
          * @param {int} book_id
          * @returns {jqXHR}
          */
         getAllBookInfo(book_id) {
-            return  $.ajax({
+            return $.ajax({
                 url: 'api/books.php',
                 type: 'GET',
                 dataType: 'json',
@@ -189,9 +185,9 @@ $(function () {
 
         /**
          * NOT USED
-         * 
+         *
          * get all book information for editing
-         * 
+         *
          * @param {int} book_id
          * @returns {Array|appL#1.Books.getBook4Edit.book}
          */
@@ -222,7 +218,7 @@ $(function () {
 
         /**
          * removing HTML element for deleted Book from <books>
-         * 
+         *
          * @param {int} book_id
          * @returns {undefined}
          */
@@ -232,14 +228,14 @@ $(function () {
 
         /**
          * remove Book from database
-         * 
+         *
          * @param {int} book_id
          * @returns {undefined}
          */
         deleteBook(book_id) {
             var $this = this;
             $.ajax({
-                type: 'POST',
+                type: 'DELETE',
                 url: 'api/books.php',
                 data: {
                     del_id: book_id
@@ -252,7 +248,7 @@ $(function () {
 
         /**
          * add Book to database
-         * 
+         *
          * @param {string} author
          * @param {string} title
          * @param {string} descr
@@ -278,7 +274,7 @@ $(function () {
 
         /**
          * update book in DB after edit
-         * 
+         *
          * @param {int} id
          * @param {string} author
          * @param {string} title
@@ -288,7 +284,7 @@ $(function () {
         updateBook(id, author, title, descr) {
             var $this = this;
             $.ajax({
-                type: 'POST',
+                type: 'PUT',
                 url: 'api/books.php',
                 data: {
                     uid: id,
@@ -306,7 +302,7 @@ $(function () {
 
         /**
          * update HTML for edited book
-         * 
+         *
          * @param {int} id
          * @param {string} author
          * @param {string} title
@@ -324,7 +320,7 @@ $(function () {
 
     /**
      * close Book Details element for all books
-     * 
+     *
      * @returns {undefined}
      */
     function closeAllBookMoreHTML() {
@@ -335,7 +331,7 @@ $(function () {
 
     /**
      * empty all form inputs after book is added
-     * 
+     *
      * @returns {undefined}
      */
     function cleanAddBookFormHTML() {
@@ -452,8 +448,7 @@ $(function () {
 
             var $editDlg = bootbox.dialog({
                 title: MSG_EDIT_TITLE,
-                message:
-                        '<div class="row">  ' +
+                message: '<div class="row">  ' +
                         '<div class="col-md-12"> ' +
                         '<form class="form-horizontal"> ' +
                         '<div class="form-group"> ' +
